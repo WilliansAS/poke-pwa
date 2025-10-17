@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212; 
+  color: #e0e0e0;
+}
+
+/* Contenedor principal */
+.App {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+header p {
+  font-size: 1.2rem;
+  color: #a0a0a0;
+  margin-bottom: 3rem;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  padding: 0.8rem 1.2rem;
+  margin: 0 auto 3rem auto; 
+  font-size: 1rem;
+  border-radius: 25px; 
+  border: 1px solid #333;
+  background-color: #2a2a2e;
+  color: #e0e0e0;
+  outline: none; 
+  transition: box-shadow 0.3s ease;
+  box-sizing: border-box; 
+}
+
+.search-bar:focus {
+  box-shadow: 0 0 15px rgba(88, 101, 242, 0.5);
+}
+
+/* Mensaje de carga */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.8rem;
+  color: #fff;
+}
+
+/* Cuadrícula responsiva */
+.pokemon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+  justify-content: center; 
+}
+
+/* Estilo de cada tarjeta Pokémon */
+.pokemon-card {
+  background: linear-gradient(145deg, #2a2a2e, #1e1e24);
+  border-radius: 15px;
+  border: 1px solid #333;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pokemon-card:hover {
+  transform: translateY(-5px); 
+  box-shadow: 0 10px 25px rgba(88, 101, 242, 0.25); 
+}
+
+.pokemon-image-wrapper {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+}
+
+.pokemon-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 5px 5px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.pokemon-card:hover img {
+  transform: scale(1.05); 
+}
+
+.pokemon-info {
+  padding: 1rem;
+}
+
+.pokemon-id {
+  display: block;
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-bottom: 0.5rem;
+}
+
+.pokemon-name {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #fff;
+}

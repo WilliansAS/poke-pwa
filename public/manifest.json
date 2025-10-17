@@ -1,0 +1,28 @@
+{
+  "short_name": "Pokédex",
+  "name": "Pokédex Progresiva",
+  "icons": [
+    {
+      "src": "pokebola64.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    },
+    {
+      "src": "pokebola192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "pokebola512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#121212",
+  "background_color": "#121212",
+  "orientation": "portrait-primary"
+}
