@@ -1,34 +1,27 @@
-const CACHE_NAME = "pokedex-cache-v4";
+const CACHE_NAME = "pokedex-cache-v-FINAL";
+
+const urlsToCache = [
+  "/",
+  "/index.html",
+  "/manifest.json",
+  "/pokebola64.png",
+  "/pokebola192.png",
+  "/pokebola512.png",
+  "/static/css/main.fe2f7fa9.css",
+  "/static/js/main.cc88c14d.js",
+  "/static/js/453.1a678cd3.chunk.js",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log("Cache abierta. Obteniendo la lista de archivos...");
-      return fetch("/asset-manifest.json")
-        .then((response) => response.json())
-        .then((manifest) => {
-          const assetsToCache = Object.values(manifest.files);
-          console.log(
-            "Guardando la App Shell y los assets en caché:",
-            assetsToCache
-          );
-
-          assetsToCache.push("/");
-          assetsToCache.push("/index.html");
-          assetsToCache.push("/manifest.json");
-          assetsToCache.push("/pokebola64.png");
-          assetsToCache.push("/pokebola192.png");
-          assetsToCache.push("/pokebola512.png");
-
-          // Guardamos TODO en la caché de una sola vez.
-          return cache.addAll(assetsToCache);
-        });
+      console.log("Cache abierta. Guardando la lista manual de archivos.");
+      return cache.addAll(urlsToCache);
     })
   );
   self.skipWaiting();
 });
 
-// Limpia las cachés viejas para ahorrar espacio.
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -45,18 +38,11 @@ self.addEventListener("activate", (event) => {
   return self.clients.claim();
 });
 
-// Modo Offline
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        return caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, networkResponse.clone());
-          return networkResponse;
-        });
-      })
-      .catch(() => {
-        return caches.match(event.request);
-      })
+    fetch(event.request).catch(() => {
+      // Si la red falla (estás offline), busca en la caché.
+      return caches.match(event.request);
+    })
   );
 });
