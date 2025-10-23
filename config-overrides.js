@@ -19,8 +19,7 @@ module.exports = override(
         {
           // Cachea las peticiones a la API de Pokémon
           urlPattern: new RegExp("^https://pokeapi.co/api/v2/pokemon"),
-          // (da la caché rápido, pero busca actualizaciones en segundo plano)
-          handler: "StaleWhileRevalidate",
+          handler: "NetworkFirst",
           options: {
             cacheName: "pokeapi-cache",
             expiration: {
