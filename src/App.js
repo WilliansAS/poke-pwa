@@ -7,6 +7,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Estados para el Modal
+  const [selectedPokemonId, setSelectedPokemonId] = useState(null);
+  const [pokemonDetails, setPokemonDetails] = useState(null);
+  const [modalLoading, setModalLoading] = useState(false);
+
   useEffect(() => {
     const fetchPokemon = async () => {
       try {
@@ -39,6 +44,28 @@ function App() {
     fetchPokemon();
   }, []);
 
+  // Detalles
+  const handleCardClick = async (id) => {
+    setSelectedPokemonId(id);
+    setModalLoading(true);
+
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+      const data = await response.json();
+      setPokemonDetails(data);
+    } catch (error) {
+      console.error("Error al buscar detalles del Pokémon:", error);
+    } finally {
+      setModalLoading(false);
+    }
+  };
+
+  // Función para cerrar el modal
+  const closeModal = () => {
+    setSelectedPokemonId(null);
+    setPokemonDetails(null);
+  };
+
   // Filtro de busqueda
   const filteredPokemon = pokemonList.filter((pokemon) =>
     pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,9 +89,14 @@ function App() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </header>
+
       <main className="pokemon-grid">
         {filteredPokemon.map((pokemon) => (
-          <div key={pokemon.id} className="pokemon-card">
+          <div
+            key={pokemon.id}
+            className="pokemon-card"
+            onClick={() => handleCardClick(pokemon.id)}
+          >
             <div className="pokemon-image-wrapper">
               <img src={pokemon.imageUrl} alt={pokemon.name} />
             </div>
@@ -77,6 +109,66 @@ function App() {
           </div>
         ))}
       </main>
+
+      {/* --- Sección del Modal --- */}
+      {selectedPokemonId && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" onClick={closeModal}>
+              &times;
+            </button>
+
+            {modalLoading && (
+              <div className="loading-container">Cargando detalles...</div>
+            )}
+
+            {/* <-- Contenido --> */}
+            {pokemonDetails && (
+              <>
+                <div className="modal-header">
+                  <img
+                    src={
+                      pokemonDetails.sprites.other["official-artwork"]
+                        .front_default
+                    }
+                    alt={pokemonDetails.name}
+                    className="modal-pokemon-image"
+                  />
+                  <h2 className="modal-pokemon-name">{pokemonDetails.name}</h2>
+                  <div className="pokemon-types">
+                    {pokemonDetails.types.map((typeInfo) => (
+                      <span
+                        key={typeInfo.type.name}
+                        className={`type-badge type-${typeInfo.type.name}`}
+                      >
+                        {typeInfo.type.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pokemon-stats">
+                  <h3>Estadísticas</h3>
+                  {pokemonDetails.stats.map((statInfo) => (
+                    <div className="stat-item" key={statInfo.stat.name}>
+                      <span className="stat-name">{statInfo.stat.name}</span>
+                      <span className="stat-value">{statInfo.base_stat}</span>
+                      <div className="stat-bar-background">
+                        <div
+                          className="stat-bar-foreground"
+                          style={{
+                            width: `${(statInfo.base_stat / 255) * 100}%`,
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
