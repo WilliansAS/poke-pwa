@@ -12,6 +12,7 @@ self.addEventListener("message", (event) => {
       icon: "/pokebola192.png",
       vibrate: [200, 100, 200],
       tag: "poke-notify",
+      renotify: true,
     };
 
     // Mostramos la notificación
