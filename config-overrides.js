@@ -13,6 +13,7 @@ module.exports = override(
         /robots\.txt/,
         /LICENSE\.txt/,
       ],
+      importScripts: ["notifications.js"],
 
       // Define cómo cachear cosas que no son parte del build (como la API)
       runtimeCaching: [

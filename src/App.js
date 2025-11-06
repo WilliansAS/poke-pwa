@@ -13,6 +13,13 @@ function App() {
   const [modalLoading, setModalLoading] = useState(false);
 
   useEffect(() => {
+    // Solicitar permiso
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission().then((resultado) => {
+        console.log("Permiso de notificación:", resultado);
+      });
+    }
+
     const fetchPokemon = async () => {
       try {
         const response = await fetch(
@@ -44,6 +51,28 @@ function App() {
     fetchPokemon();
   }, []);
 
+  const sendNotification = async (pokemonName) => {
+    if (Notification.permission !== "granted") {
+      console.log("Permiso de notificación no concedido.");
+      return;
+    }
+
+    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      try {
+        navigator.serviceWorker.controller.postMessage({
+          type: "SHOW_NOTIFICATION",
+          pokemonName: pokemonName,
+        });
+      } catch (error) {
+        console.error("Error al enviar mensaje al SW:", error);
+      }
+    } else {
+      console.log(
+        "El Service Worker no está listo o no está controlando la página."
+      );
+    }
+  };
+
   // Detalles
   const handleCardClick = async (id) => {
     setSelectedPokemonId(id);
@@ -53,6 +82,8 @@ function App() {
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
       const data = await response.json();
       setPokemonDetails(data);
+      // Enviar notificación
+      sendNotification(data.name);
     } catch (error) {
       console.error("Error al buscar detalles del Pokémon:", error);
     } finally {
